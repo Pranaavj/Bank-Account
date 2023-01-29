@@ -1,0 +1,93 @@
+#include <iostream>
+using namespace std;
+
+class BankAccount
+    {
+        public:
+        string owner;
+        double balance;
+        void deposit(double amount)
+        {
+            balance=balance+amount;
+            
+        }
+        void withdraw(double amount)
+        {
+            balance=balance-amount;
+        }
+    };
+    class CheckingAccount:public BankAccount
+    {
+        public:
+        
+        double insufficientFundsFee;
+        void processCheck(double checkAmount)
+        {
+            balance=balance+checkAmount;
+            
+        }
+        void withdraw(double amount)
+        {
+            balance=balance-amount;
+            if(balance<0)
+            {
+                balance=balance-insufficientFundsFee;
+            }
+        }
+    };
+    class SavingAccount:public BankAccount
+    {public:
+        double annualInterestRate;
+        double monthlyInterestRate;
+        double var1;//variable for checking the amount is more than zero or not after withdraw from account
+        void depositMonthlyInterest()
+        {   monthlyInterestRate=annualInterestRate/12;
+            //monthly interest rate is equal to annual interest rate divided by 12
+            balance=balance+monthlyInterestRate;
+        }
+        void withdraw(double amount)
+        {
+          var1=balance-amount;
+          if(var1<0)
+          {
+             cout<<"Sorry,You do not have sufficient balance in your account";
+              
+          }
+          else{
+              balance=balance-amount;
+          }
+        }
+        
+    };
+int main() {
+    SavingAccount sa,sa2;//creating two objects for savingaccount
+    CheckingAccount ca;//creating an object for checkingaccount
+    
+    sa.owner="joe";  
+    sa.balance=100;
+    sa.annualInterestRate=1;
+    
+    ca.owner="Emily";
+    ca.balance=200;
+    ca.insufficientFundsFee=10;
+    
+    sa.withdraw(25);//withdraw 25 from joe account
+    ca.processCheck(50);//deposit 50 to Emily account
+    
+    //Now transfer 100 from emily account to Joe account
+    ca.withdraw(100);
+    sa.deposit(100);
+    
+    
+    sa2.owner="Sam";
+    sa2.balance=250;//initial balance of sam account
+    sa2.annualInterestRate=0.5;
+    
+    sa.depositMonthlyInterest();//deposit monthly interest for joe
+    sa2.depositMonthlyInterest();//deposit monthly interset for Sam
+    
+    ca.withdraw(500);//withdraw 500 from emily account
+    sa.withdraw(500);//withdraw 500 from joe account
+    
+    return 0;
+}
